@@ -1,0 +1,25 @@
+# Configuration for Unbound recursive DNS server
+#
+# This file was automatically created by Chef.
+# All manual changes are going to be overridden
+#
+# Source: unbound::templates/default/unbound.conf.erb
+
+server:
+<% @server.keys.sort.each do |key| -%>
+<% Array(@server[key]).each do |value| %>
+  <%= key %>: <%=
+    case value
+      when true then "yes"
+      when false, nil then "no"
+      when Array then value.map(&:to_s).join(" ")
+      when String then value.inspect
+      else value.to_s
+    end
+  %>
+<%- end %>
+<%- end %>
+
+<% @includes.each do |incl| %>
+include: "<%= incl.start_with?("/") ? incl : "#{node["unbound"]["server"]["directory"]}/#{incl}" %>"
+<% end %>
