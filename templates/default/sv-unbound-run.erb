@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec "<%= node["unbound"]["bindir"] %>/unbound" -d -c "<%= node["unbound"]["server"]["directory"] %>/unbound.conf"

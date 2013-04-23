@@ -30,17 +30,34 @@ directory "#{node["unbound"]["server"]["directory"]}/conf.d" do
   mode "0755"
 end
 
-template "#{node["unbound"]["server"]["directory"]}/unbound.conf" do
+template "unbound.conf" do
+  path "#{node["unbound"]["server"]["directory"]}/unbound.conf"
   source "unbound.conf.erb"
   mode 0644
   owner "root"
   group root_group
   variables :server => node["unbound"]["server"],
             :includes => []
-  notifies :restart, "service[unbound]"
 end
 
-service "unbound" do
-  supports "restart" => true
-  action [:enable, :start]
+case node["unbound"]["init_style"]
+when "init"
+  service "unbound" do
+    supports "restart" => true
+    action [:enable, :start]
+    subscribes :restart, "template[unbound.conf]"
+  end
+when "runit"
+  service "unbound_init" do
+    service_name "unbound"
+    action :disable
+    notifies :stop, "service[unbound_init]", :immediately
+  end
+
+  include_recipe "runit"
+  runit_service "unbound" do
+    default_logger true
+    subscribes :restart, "template[unbound.conf]"
+    action [:enable, :start]
+  end
 end

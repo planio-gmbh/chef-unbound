@@ -1,8 +1,12 @@
 default["unbound"]["pidfile"] = "/var/run/unbound.pid"
 default["unbound"]["bindir"] = "/usr/sbin"
 
+
 # If true, we will setup unbound in a chroot in ["unbound"]["server"]["directory"]
 default["unbound"]["setup_chroot"] = true
+
+# Init style, can be either "init" or "runit"
+default["unbound"]["init_style"] = "init"
 
 # specify the interfaces to answer queries from by ip-address.
 # The default is to listen to localhost (127.0.0.1 and ::1).
