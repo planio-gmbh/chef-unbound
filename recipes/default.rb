@@ -50,8 +50,8 @@ when "init"
 when "runit"
   service "unbound_init" do
     service_name "unbound"
-    action :disable
-    notifies :stop, "service[unbound_init]", :immediately
+    pattern "unbound"
+    action [:stop, :disable]
   end
 
   include_recipe "runit"
