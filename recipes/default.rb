@@ -40,12 +40,17 @@ template "unbound.conf" do
             :includes => []
 end
 
+check_config = "\"#{node["unbound"]["bindir"]}/unbound-checkconf\" \"#{node["unbound"]["server"]["directory"]}/unbound.conf\""
 case node["unbound"]["init_style"]
 when "init"
   service "unbound" do
     supports "restart" => true
     action [:enable, :start]
     subscribes :restart, "template[unbound.conf]"
+
+    start_command "#{check_config} && /etc/init.d/unbound start"
+    reload_command "#{check_config} && /etc/init.d/unbound reload"
+    restart_command "#{check_config} && /etc/init.d/unbound restart"
   end
 when "runit"
   service "unbound_init" do
@@ -58,6 +63,9 @@ when "runit"
   runit_service "unbound" do
     default_logger true
     subscribes :restart, "template[unbound.conf]"
+
+    reload_command "#{check_config} && #{node['runit']['sv_bin']} restart #{node['runit']['service_dir']}/unbound"
+    restart_command "#{check_config} && #{node['runit']['sv_bin']} restart #{node['runit']['service_dir']}/unbound"
     action [:enable, :start]
   end
 end
