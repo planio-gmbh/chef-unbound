@@ -55,7 +55,9 @@ when "init"
 when "runit"
   service "unbound_init" do
     service_name "unbound"
-    pattern "unbound"
+    # Find a "normal" daemonized unbound process.
+    # runit processes are run as children of runsv
+    status_command "pgrep --parent 1 -f '^#{node["unbound"]["bindir"]}/unbound(\s+|$)'"
     action [:stop, :disable]
   end
 
