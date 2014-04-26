@@ -58,7 +58,9 @@ when "runit"
     # Find a "normal" daemonized unbound process.
     # runit processes are run as children of runsv
     status_command "pgrep --parent 1 -f '^#{node["unbound"]["bindir"]}/unbound(\s+|$)'"
-    action [:stop, :disable]
+    # We keep the init service enable to please dependent services in insserv
+    # Yes, I know this is braindead but it works...
+    action [:stop, :enable]
   end
 
   include_recipe "runit"
