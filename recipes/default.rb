@@ -57,7 +57,7 @@ when "runit"
     service_name "unbound"
     # Find a "normal" daemonized unbound process.
     # runit processes are run as children of runsv
-    status_command "pgrep --parent 1 -f '^#{node["unbound"]["bindir"]}/unbound(\s+|$)'"
+    status_command "pgrep -P 1 -f '^#{node["unbound"]["bindir"]}/unbound(\s+|$)'"
     # We keep the init service enable to please dependent services in insserv
     # Yes, I know this is braindead but it works...
     action [:stop, :enable]
