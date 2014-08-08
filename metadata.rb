@@ -1,3 +1,4 @@
+name             "unbound"
 maintainer       "Planio GmbH"
 maintainer_email "support@plan.io"
 license          "Apache 2.0"
