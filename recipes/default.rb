@@ -60,7 +60,7 @@ when "runit"
     status_command "pgrep -P 1 -f '^#{node["unbound"]["bindir"]}/unbound(\s+|$)'"
     # We keep the init service enable to please dependent services in insserv
     # Yes, I know this is braindead but it works...
-    action [:stop, :enable]
+    action [:stop]
   end
 
   include_recipe "runit"
